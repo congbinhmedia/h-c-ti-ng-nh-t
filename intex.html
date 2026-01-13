@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>lớp Học Công Bình JLPT - Home</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+</head>
+<body>
+
+<header id="mainHeader" class="hidden">
+    <div class="top-nav">
+        <button class="nav-btn" onclick="showSection('overview')">ℹ️ Giới thiệu</button>
+        <h1>lớp Học Công Bình JLPT</h1>
+    </div>
+    
+    <div class="controls">
+        <input type="text" id="searchInput" placeholder="Tìm kiếm Kanji hoặc nghĩa...">
+        
+        <div class="filter-group">
+            <button class="btn-filter active" onclick="selectLevel('N5')">N5</button>
+            <button class="btn-filter is-locked" onclick="selectLevel('N4')" id="btn-N4">🔒 N4</button>
+            <button class="btn-filter is-locked" onclick="selectLevel('N3')" id="btn-N3">🔒 N3</button>
+            <button class="btn-filter is-locked" onclick="selectLevel('N2')" id="btn-N2">🔒 N2</button>
+            <button class="btn-filter is-locked" onclick="selectLevel('N1')" id="btn-N1">🔒 N1</button>
+        </div>
+
+        <div class="sub-controls">
+            <button class="btn-sub" id="btnFav" onclick="toggleFavoritesView()">⭐ Yêu thích</button>
+            <button class="btn-sub highlight" onclick="startQuiz()">✍️ Luyện tập</button>
+        </div>
+
+        <div class="progress-container">
+            <div class="progress-info" id="unlockNotice">Đang tải...</div>
+            <div class="progress-bar"><div id="progressFill" class="progress-fill"></div></div>
+        </div>
+
+        <div class="speed-control">
+            <span>🔊 Tốc độ: <span id="speedValue">0.8</span>x</span>
+            <input type="range" id="speedRange" min="0.3" max="1.5" step="0.1" value="0.8">
+        </div>
+    </div>
+</header>
+
+<main>
+    <section id="overviewSection">
+        <div class="bg-circles">
+            <div class="circle c1"></div>
+            <div class="circle c2"></div>
+            <div class="circle c3"></div>
+        </div>
+
+        <div class="hero-card">
+            <div class="badge">Học là mê - Thi là đỗ 🚀</div>
+            <h1>Chào mừng đến với<br><span>lớp Học Công Bình JLPT</span></h1>
+            <p class="hero-desc">Hành trình chinh phục N1 bắt đầu từ đây. Trải nghiệm phương pháp học Flashcard thông minh và sinh động nhất.</p>
+            
+            <div class="feature-grid">
+                <div class="feat-item">
+                    <div class="feat-icon">🔒</div>
+                    <h3>Khóa Level</h3>
+                    <p>Thuộc 80% để mở cấp độ mới.</p>
+                </div>
+                <div class="feat-item">
+                    <div class="feat-icon">✅</div>
+                    <h3>Tự đánh giá</h3>
+                    <p>Tích chọn khi bạn đã thuộc bài.</p>
+                </div>
+                <div class="feat-item">
+                    <div class="feat-icon">⭐</div>
+                    <h3>Ghi chú</h3>
+                    <p>Lưu từ khó để luyện tập riêng.</p>
+                </div>
+                <div class="feat-item">
+                    <div class="feat-icon">✍️</div>
+                    <h3>Luyện tập</h3>
+                    <p>Trắc nghiệm phản xạ nhanh.</p>
+                </div>
+            </div>
+
+            <button class="btn-start" onclick="showSection('main')">
+                BẮT ĐẦU HỌC NGAY ✨
+            </button>
+        </div>
+    </section>
+
+    <div id="cardGrid" class="hidden"></div>
+
+    <div id="quizArea" class="hidden">
+        <div class="quiz-container">
+            <button class="nav-btn" onclick="showSection('main')" style="margin-bottom: 20px;">← Quay lại học</button>
+            <div class="quiz-card-box">
+                <h2 id="quizQuestion">?</h2>
+                <div id="quizOptions" class="quiz-options"></div>
+                <div id="quizFeedback" class="quiz-feedback"></div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script src="script.js"></script>
+</body>
+</html>
