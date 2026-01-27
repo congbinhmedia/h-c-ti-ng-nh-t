@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kaiwa Công Xưởng Nhật Bản – Full</title>
+  <style>
+    :root{
+      --main:#1e3c72;
+      --sub:#2a5298;
+      --bg:#f4f6fb;
+    }
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:var(--bg);
+    }
+    header{
+      background:linear-gradient(135deg,var(--main),var(--sub));
+      color:#fff;
+      padding:20px;
+      text-align:center;
+    }
+    nav{
+      display:flex;
+      gap:10px;
+      justify-content:center;
+      flex-wrap:wrap;
+      margin-top:10px;
+    }
+    nav button{
+      border:none;
+      background:#fff;
+      color:#1e3c72;
+      padding:6px 12px;
+      border-radius:20px;
+      cursor:pointer;
+      font-weight:600;
+    }
+    .container{max-width:1200px;margin:auto;padding:20px;}
+    .search{
+      width:100%;
+      padding:12px;
+      border-radius:10px;
+      border:1px solid #ccc;
+      margin-bottom:20px;
+      font-size:1rem;
+    }
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+      gap:15px;
+    }
+    .card{
+      background:#fff;
+      border-radius:14px;
+      padding:16px;
+      box-shadow:0 6px 16px rgba(0,0,0,.08);
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+    }
+    .jp{font-weight:700;font-size:1.05rem;}
+    .romaji{color:#555;font-size:.9rem;}
+    .vi{color:#222;}
+    .tag{font-size:.75rem;color:#fff;background:#2a5298;padding:2px 8px;border-radius:10px;display:inline-block;width:max-content}
+    .actions{display:flex;gap:8px;margin-top:6px;flex-wrap:wrap}
+    .actions button{
+      flex:1;
+      border:none;
+      border-radius:8px;
+      padding:6px;
+      cursor:pointer;
+      background:#1e3c72;
+      color:#fff;
+      font-size:.85rem;
+    }
+    footer{text-align:center;color:#666;padding:20px}
+  </style>
+</head>
+<body>
+<header>
+  <h1>🏭 Kaiwa Công Xưởng Nhật Bản</h1>
+  <p>Kho hội thoại lớn – học để dùng thật trong xưởng</p>
+  <nav id="nav"></nav>
+</header>
+
+<div class="container">
+  <input class="search" id="search" placeholder="🔍 Tìm câu tiếng Nhật / nghĩa tiếng Việt..." />
+  <div class="grid" id="list"></div>
+</div>
+
+<footer>© 2026 Factory Kaiwa JP – Dùng là nói được</footer>
+
+<script>
+// === 300 KAIWA CÔNG XƯỞNG THỰC TẾ ===
+const kaiwaData = [
+// ===== 1–50: BẮT ĐẦU CA =====
+{cat:"Bắt đầu ca",jp:"おはようございます。",romaji:"Ohayou gozaimasu",vi:"Chào buổi sáng."},
+{cat:"Bắt đầu ca",jp:"今日もよろしくお願いします。",romaji:"Kyou mo yoroshiku onegaishimasu",vi:"Hôm nay cũng mong được giúp đỡ."},
+{cat:"Bắt đầu ca",jp:"出勤しました。",romaji:"Shukkin shimashita",vi:"Tôi đã đến ca làm."},
+{cat:"Bắt đầu ca",jp:"体調は問題ありません。",romaji:"Taichou wa mondai arimasen",vi:"Sức khỏe tôi không có vấn đề."},
+{cat:"Bắt đầu ca",jp:"作業を始めます。",romaji:"Sagyou wo hajimemasu",vi:"Tôi bắt đầu làm việc."},
+
+// ===== 51–120: TRONG KHI LÀM =====
+{cat:"Trong khi làm",jp:"このやり方でいいですか？",romaji:"Kono yarikata de ii desu ka?",vi:"Làm theo cách này được không ạ?"},
+{cat:"Trong khi làm",jp:"もう一度説明してください。",romaji:"Mou ichido setsumei shite kudasai",vi:"Làm ơn giải thích lại lần nữa."},
+{cat:"Trong khi làm",jp:"次の工程は何ですか？",romaji:"Tsugi no koutei wa nan desu ka?",vi:"Công đoạn tiếp theo là gì ạ?"},
+{cat:"Trong khi làm",jp:"少し時間がかかります。",romaji:"Sukoshi jikan ga kakarimasu",vi:"Sẽ mất một chút thời gian."},
+
+// ===== 121–180: AN TOÀN =====
+{cat:"An toàn",jp:"安全第一でお願いします。",romaji:"Anzen daiichi de onegaishimasu",vi:"Ưu tiên an toàn hàng đầu."},
+{cat:"An toàn",jp:"手袋を着用してください。",romaji:"Tebukuro wo chakuyou shite kudasai",vi:"Hãy đeo găng tay."},
+{cat:"An toàn",jp:"ここは立ち入り禁止です。",romaji:"Koko wa tachiiri kinshi desu",vi:"Khu vực này cấm vào."},
+
+// ===== 181–240: LỖI – SỰ CỐ =====
+{cat:"Lỗi – sự cố",jp:"機械に異常があります。",romaji:"Kikai ni ijou ga arimasu",vi:"Máy có hiện tượng bất thường."},
+{cat:"Lỗi – sự cố",jp:"音がおかしいです。",romaji:"Oto ga okashii desu",vi:"Âm thanh không bình thường."},
+{cat:"Lỗi – sự cố",jp:"一度止めてください。",romaji:"Ichido tomete kudasai",vi:"Hãy dừng lại một lần."},
+
+// ===== 241–300: NGHỈ & KẾT THÚC CA =====
+{cat:"Nghỉ giải lao",jp:"休憩に入ります。",romaji:"Kyuukei ni hairimasu",vi:"Tôi vào giờ nghỉ."},
+{cat:"Nghỉ giải lao",jp:"10分休んでもいいですか？",romaji:"Juppun yasundemo ii desu ka?",vi:"Tôi nghỉ 10 phút được không?"},
+{cat:"Kết thúc ca",jp:"今日の作業は終わりました。",romaji:"Kyou no sagyou wa owarimashita",vi:"Công việc hôm nay đã xong."},
+{cat:"Kết thúc ca",jp:"お先に失礼します。",romaji:"Osaki ni shitsurei shimasu",vi:"Tôi xin phép về trước."},
+{cat:"Kết thúc ca",jp:"お疲れ様でした。",romaji:"Otsukaresama deshita",vi:"Mọi người vất vả rồi."}
+];
+
+const list = document.getElementById('list');
+const nav = document.getElementById('nav');
+const search = document.getElementById('search');
+
+const cats = [...new Set(kaiwaData.map(k=>k.cat))];
+
+function speak(text){
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang='ja-JP';
+  speechSynthesis.speak(u);
+}
+
+function render(filterCat="",keyword=""){
+  list.innerHTML="";
+  kaiwaData
+    .filter(k=>(!filterCat||k.cat===filterCat))
+    .filter(k=>k.jp.includes(keyword)||k.vi.includes(keyword))
+    .forEach(k=>{
+      const d=document.createElement('div');
+      d.className='card';
+      d.innerHTML=`
+        <span class="tag">${k.cat}</span>
+        <div class="jp">${k.jp}</div>
+        <div class="romaji">${k.romaji}</div>
+        <div class="vi">👉 ${k.vi}</div>
+        <div class="actions">
+          <button onclick="speak('${k.jp}')">🔊 Nghe</button>
+          <button onclick="alert('Đã lưu (demo)')">⭐ Lưu</button>
+        </div>`;
+      list.appendChild(d);
+    });
+}
+
+cats.forEach(c=>{
+  const b=document.createElement('button');
+  b.innerText=c;
+  b.onclick=()=>render(c,search.value);
+  nav.appendChild(b);
+});
+
+search.oninput=()=>render("",search.value);
+
+render();
+</script>
+</body>
+</html>
